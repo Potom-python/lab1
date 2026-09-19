@@ -10,12 +10,19 @@ if __name__ == '__main__':
         tokens = tokenize(arguments[1:])
         rpn_tokens = pars_to_rpn(tokens)
         print(calculate(rpn_tokens))
-    if command == 'convert':
+    elif command == 'convert':
         arguments = sys.argv[1:]
         if len(arguments) != 6:
             raise ValueError('Неверное количество команд или значений')
-        args_pars = {
-            arguments[2]: arguments[3],
-            arguments[4]: arguments[5]
-        }
-        print(convertation(arguments[1], args_pars['--from'], args_pars['--to']))
+        try:
+            value = arguments[1]
+            args_pars = {
+                arguments[2]: arguments[3],
+                arguments[4]: arguments[5]
+            }
+            from_unit = args_pars['--from']
+            to_unit = args_pars['--to']
+        except Exception:
+            raise ValueError('Неверно указаны параметры --from или --to')
+
+        print(convertation(value, from_unit, to_unit))

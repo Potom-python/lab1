@@ -1,24 +1,29 @@
 from . import AbsoluteZeroError
+from decimal import Decimal, getcontext, ROUND_HALF_UP
 
+getcontext().prec = 10
+getcontext().rounding = ROUND_HALF_UP
 
 def convertation(value, from_unit, to_unit):
-    value = float(value)
+    value = Decimal(value)
+    from_unit = from_unit.lower()
+    to_unit = to_unit.lower()
 
     mass_coefficients = {
-        'g': 1.0,
-        'kg': 1000.0
+        'g': Decimal(1),
+        'kg': Decimal(1000)
     }
     lens_coefficients = {
-        'mm': 1.0,
-        'cm': 10.0,
-        'm': 1000.0,
-        'km': 1000000.0
+        'mm': Decimal(1),
+        'cm': Decimal(10),
+        'm': Decimal(1000),
+        'km': Decimal(1000000)
     }
 
     result = None
 
-    if (from_unit == 'k' and value < 0) or (from_unit == 'c' and value < -273.15) or (
-            from_unit == 'f' and value < -459.67):
+    if (from_unit == 'k' and value < Decimal(0)) or (from_unit == 'c' and value < Decimal('-273.15')) or (
+            from_unit == 'f' and value < Decimal('-469.67')):
         raise AbsoluteZeroError(f'Физически невозможная температура: {value} {from_unit} ниже абсолютного нуля')
 
     if from_unit in mass_coefficients.keys():
@@ -36,20 +41,20 @@ def convertation(value, from_unit, to_unit):
     elif from_unit == 'c':
         pass
     elif from_unit == 'f':
-        value = (value - 32) / 1.8
+        value = (value - Decimal(32)) / Decimal('1.8')
     elif from_unit == 'k':
-        value = value - 273.15
+        value = value - Decimal('273.15')
 
     if to_unit == 'c':
         result = value
     elif to_unit == 'f':
-        result = (value * 1.8) + 32
+        result = (value * Decimal('1.8')) + Decimal(32)
     elif to_unit == 'k':
-        result = value + 273.15
+        result = value + Decimal('273.15')
     else:
         raise ValueError(f'Невозможно перевести из {from_unit} в {to_unit} или {to_unit} нету в базе')
 
     if result is None:
         raise ValueError('Введена неверная единица измерения')
 
-    return result
+    return result.normalize()

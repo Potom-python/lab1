@@ -1,3 +1,8 @@
+from decimal import Decimal, getcontext, ROUND_HALF_UP
+
+getcontext().prec = 10
+getcontext().rounding = ROUND_HALF_UP
+
 def pars_to_rpn(tokens):
     prioritets = {
         '+': 1, '-': 1, '*': 2, '/': 2, 'UN+': 3, 'UN-': 3
@@ -26,7 +31,7 @@ def calculate(rpn_tokens):
     calc_stack = []
     for name, value in rpn_tokens:
         if name == 'NUMBER':
-            calc_stack.append(float(value))
+            calc_stack.append(Decimal(value))
         elif name == 'UNAROP':
             if value == '+':
                 pass
@@ -34,6 +39,8 @@ def calculate(rpn_tokens):
                 number = calc_stack.pop()
                 calc_stack.append(-number)
         else:
+            if len(calc_stack) < 2:
+                raise ValueError("Пропущен операнд в выражении")
             a = calc_stack.pop()
             b = calc_stack.pop()
             if value == '+':
@@ -43,8 +50,8 @@ def calculate(rpn_tokens):
             elif value == '*':
                 calc_stack.append(a * b)
             elif value == '/':
-                if a == 0.0:
+                if a == Decimal(0):
                     raise ValueError('Деление на 0 недопустимо')
                 calc_stack.append(b / a)
 
-    return calc_stack[0]
+    return calc_stack[0].normalize()
