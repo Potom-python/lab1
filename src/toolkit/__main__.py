@@ -16,8 +16,8 @@ if __name__ == '__main__':
         print(calculate(rpn_tokens))
     if command == 'convert':
         arguments = sys.argv[1:]
-        if len(arguments) != 5:
-            raise ValueError('Неверное количество команд ии значений')
+        if len(arguments) != 6:
+            raise ValueError('Неверное количество команд или значений')
         args_pars = {
             arguments[2]: arguments[3],
             arguments[4]: arguments[5]

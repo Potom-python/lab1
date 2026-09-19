@@ -1,8 +1,11 @@
+from toolkit.errors import AbsoluteZeroError
+
+
 def convertation(value, from_unit, to_unit):
     value = float(value)
 
     mass_coefficients = {
-        'g' : 1.0,
+        'g': 1.0,
         'kg': 1000.0
     }
     lens_coefficients = {
@@ -14,13 +17,16 @@ def convertation(value, from_unit, to_unit):
 
     result = None
 
+    if (from_unit == 'k' and value < 0) or (from_unit == 'c' and value < -273.15) or (
+            from_unit == 'f' and value < -459.67):
+        raise AbsoluteZeroError(f'Физически невозможная температура: {value} {from_unit} ниже абсолютного нуля')
 
     if from_unit in mass_coefficients.keys():
         value = value * mass_coefficients[from_unit]
         if to_unit not in mass_coefficients.keys():
             raise ValueError(f'Невозможно перевести из {from_unit} в {to_unit}')
         result = value / mass_coefficients[to_unit]
-        return  result
+        return result
     elif from_unit in lens_coefficients.keys():
         value = value * lens_coefficients[from_unit]
         if to_unit not in lens_coefficients.keys():
