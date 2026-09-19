@@ -1,0 +1,2 @@
+class ConsecutiveOperatorsError(Exception):
+    pass
