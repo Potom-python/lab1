@@ -6,6 +6,8 @@ from toolkit.errors import ConsecutiveOperatorsError
 def tokenize(expression):
     if type(expression) is list:
         expression = ''.join(expression)
+    if not expression:
+        raise SyntaxError('Выражение не должно быть пустым')
     if expression[0] == '.':
         raise ValueError('Выражение не может начинаться с точки')
     rules = [
