@@ -11,15 +11,16 @@ def tokenize(expression):
     if expression[0] == '.':
         raise ValueError('Выражение не может начинаться с точки')
     rules = [
-        ('NUMBER', '\d+(\.\d+)?'),
-        ('OP', '[+-/*]'),
-        ('RANDSYM', '.')
+        ('NUMBER', r'\d+(\.\d+)?'),
+        ('OP', r'[+-/*]'),
+        ('RANDSYM', r'.')
     ]
 
     tokens = []
     pattern = '|'.join(f'(?P<{name}>{rule})' for name, rule in rules)
     last_name = None
-    count_near_op = 0
+    count_plus_and_minus = 0
+    count_multip_division = 0
     for foldable in finditer(pattern, expression):
         name = foldable.lastgroup
         value = foldable.group()
@@ -32,10 +33,17 @@ def tokenize(expression):
         if name == 'OP':
             if (last_name is None or last_name == 'OP'):
                 name = 'UNAROP'
-            count_near_op += 1
+            if value in '+-':
+                count_plus_and_minus += 1
+            else:
+                count_multip_division += 1
+
         else:
-            count_near_op = 0
-        if count_near_op >= 3:
+            count_plus_and_minus = 0
+            count_multip_division = 0
+        if count_plus_and_minus >= 3:
+            raise ConsecutiveOperatorsError('Недопустимое кол-во подряд идущих операторов')
+        elif count_multip_division >= 2:
             raise ConsecutiveOperatorsError('Недопустимое кол-во подряд идущих операторов')
         last_name = name
         tokens.append((name, value))

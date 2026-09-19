@@ -13,7 +13,6 @@ def pars_to_rpn(tokens):
                 top_name, top_value = stack[-1]
                 top_key = f'UN{top_value}' if top_name == 'UNAROP' else top_value
                 if prioritets[top_key] >= prioritets[op_key]:
-                    print(top_key, op_key)
                     output.append(stack.pop())
                 else:
                     break
@@ -24,7 +23,6 @@ def pars_to_rpn(tokens):
 
 
 def calculate(rpn_tokens):
-    print(rpn_tokens)
     calc_stack = []
     for name, value in rpn_tokens:
         if name == 'NUMBER':
