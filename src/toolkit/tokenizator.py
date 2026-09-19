@@ -1,6 +1,6 @@
 from re import *
 
-from toolkit.errors import ConsecutiveOperatorsError
+from . import ConsecutiveOperatorsError
 
 
 def tokenize(expression):

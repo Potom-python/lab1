@@ -1,9 +1,5 @@
 import sys
-from argparse import ArgumentParser
-
-from toolkit.tokenizator import tokenize
-from toolkit.calculator import pars_to_rpn, calculate
-from toolkit.converter import convertation
+from . import tokenize, pars_to_rpn, calculate, convertation
 
 if __name__ == '__main__':
     command = sys.argv[1]

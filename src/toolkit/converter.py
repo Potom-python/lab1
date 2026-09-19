@@ -1,4 +1,4 @@
-from toolkit.errors import AbsoluteZeroError
+from . import AbsoluteZeroError
 
 
 def convertation(value, from_unit, to_unit):
