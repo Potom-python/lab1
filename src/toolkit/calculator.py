@@ -3,6 +3,7 @@ from decimal import Decimal, getcontext, ROUND_HALF_UP
 getcontext().prec = 10
 getcontext().rounding = ROUND_HALF_UP
 
+
 def pars_to_rpn(tokens):
     prioritets = {
         '+': 1, '-': 1, '*': 2, '/': 2, 'UN+': 3, 'UN-': 3
