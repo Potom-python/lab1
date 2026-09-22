@@ -1,8 +1,9 @@
 import pytest
-from src.toolkit.tokenizator import tokenize
-from src.toolkit.calculator import pars_to_rpn, calculate
+
+from src.toolkit.calculator import calculate, pars_to_rpn
 from src.toolkit.converter import convertation
 from src.toolkit.errors import AbsoluteZeroError, ConsecutiveOperatorsError
+from src.toolkit.tokenizator import tokenize
 
 
 # 1. Пустое выражение
@@ -32,10 +33,10 @@ def test_neg_division_by_zero():
 # 5. Температура ниже абсолютного нуля
 def test_neg_absolute_zero():
     with pytest.raises(AbsoluteZeroError):
-        convertation('-300', 'c', 'k')
+        convertation("-300", "c", "k")
 
 
 # 6. Несовместимые группы перевода
 def test_neg_incompatible_units():
     with pytest.raises(ValueError, match="Невозможно перевести"):
-        convertation('10', 'kg', 'm')
+        convertation("10", "kg", "m")
