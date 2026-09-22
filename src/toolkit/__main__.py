@@ -46,5 +46,5 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        print(f"Ошибка: {e}", file=sys.stderr)
+        print(f"{e.__class__} Ошибка: {e}", file=sys.stderr)
         sys.exit(2)
