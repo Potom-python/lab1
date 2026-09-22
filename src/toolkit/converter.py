@@ -28,7 +28,7 @@ def convertation(value, from_unit, to_unit):
     ):
         raise AbsoluteZeroError(
             f"Физически невозможная температура:"
-            f" {value} {from_unit} ниже абсолютного нуля"
+            f" {value}{from_unit.upper()} ниже абсолютного нуля"
         )
 
     if from_unit in mass_coefficients:
