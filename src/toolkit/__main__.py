@@ -5,7 +5,24 @@ from .converter import convertation
 from .tokenizator import tokenize
 
 
+def format_float(a: float) -> str:
+    """Форматирование вывода типа float"""
+    return f"{a:.10f}".rstrip('0').rstrip('.')
+
+
 def main():
+    """Обработка CLI для дальнейшей загрузки значенйи в вычислительное ядро
+
+    Обрабатывает sys.argv 1 эл. всегда явл командой.
+    calc: заносит в функцию calculate все аргументы
+    введенные в консоль после calc, что делает необязательным ввод через командную строку вида:
+    python -m toolkit calc "1+2". Теперь можно: python -m toolkit calc 1 + 2 +3+4 +1 - 7, далее выводит
+    отформатированный результат выполнения функции
+    --help: выводит справку по использованию калькулятора, заканчивается с кодом возврата 0
+    convert: обрабатывает все аргументы после convert, проверяет длину, чтобы удостоверится
+    в корректном использовании команды. Далее создает словарь флаг: значение и вносит значения в функцию.
+    Далее выводит отформатированный результат выполнения функции
+    """
     command = sys.argv[1]
     if command == "":
         raise ValueError("Строка не должна быть пустой")
@@ -13,7 +30,7 @@ def main():
         arguments = sys.argv[1:]
         tokens = tokenize(arguments[1:])
         rpn_tokens = pars_to_rpn(tokens)
-        print(calculate(rpn_tokens))
+        print(format_float(float(calculate(rpn_tokens))))
     elif command == "--help":
         print("Калькулятор и конвертер")
         print("Допустимые единицы")
@@ -39,7 +56,7 @@ def main():
         except Exception:
             raise ValueError("Неверно указаны параметры --from или --to")
 
-        print(convertation(value, from_unit, to_unit))
+        print(format_float(float(convertation(value, from_unit, to_unit))))
 
 
 if __name__ == "__main__":

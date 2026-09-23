@@ -29,16 +29,28 @@ def test_calc_spaces_ignored():
     assert calculate(rpn) == Decimal(4)
 
 
-# 5. Регистр единиц измерения не учитывается
+# 5. Проверка деления с большим кол-вом нулей
+def test_calc_format_float():
+    rpn = pars_to_rpn(tokenize("1 / 1000000000 "))
+    assert calculate(rpn) == Decimal("0.000000001")
+
+
+# 6. Проверка вычислений больших чисел
+def test_calc_large_expression():
+    rpn = pars_to_rpn(tokenize('-12 * 12312 + 53242 - 742 + 432 * 5 - 8 + 7876 - 1234 / 2'))
+    assert calculate(rpn) == Decimal(-85833)
+
+
+# 7. Регистр единиц измерения не учитывается
 def test_convert_case_insensitivity():
-    assert convertation("10", "KG", "g") == 10000.0
+    assert convertation("10", "KG", "g") == Decimal('10000')
 
 
-# 6. Конвертация единиц длины
+# 8. Конвертация единиц длины
 def test_convert_length():
-    assert convertation("150", "cm", "m") == 1.5
+    assert convertation("150", "cm", "m") == Decimal('1.5')
 
 
-# 7. Конвертация температур + проверка на учет регистра
+# 9. Конвертация температур + проверка на учет регистра
 def test_convert_temperature():
-    assert convertation("100", "c", "F") == 212.0
+    assert convertation("100", "c", "F") == Decimal('212')

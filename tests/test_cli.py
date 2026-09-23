@@ -24,3 +24,11 @@ def test_cli_correct_answer(monkeypatch, capsys):
     main()
     answer = capsys.readouterr()
     assert answer.out.strip() == '8'
+
+
+# 4. Проверка формата вывода float
+def test_cli_correct_format_float(monkeypatch, capsys):
+    monkeypatch.setattr(sys, 'argv', ['__main__.py', 'calc', '1/1000000'])
+    main()
+    answer = capsys.readouterr()
+    assert answer.out.strip() == '0.000001'

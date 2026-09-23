@@ -6,7 +6,14 @@ getcontext().prec = 10
 getcontext().rounding = ROUND_HALF_UP
 
 
-def convertation(value, from_unit, to_unit):
+def convertation(value: str, from_unit: str, to_unit: str) -> Decimal:
+    """Конвертирует из одной величины в другую
+
+    В случае масс и длин реализован с помощью словаря, в котором есть какая-то базовая единица, в которую переводится
+    переданная, после чего конвертируется в уже нужную умножая базовую на значение нужной в словаре.
+    В случае с температурой реализовано с помощью if, elif, else и формул, по которым опять же переданная единица
+    переводится в базовую и уже из нее с помощью другой формулы переводится в нужную.
+    """
     value = Decimal(value)
     from_unit = from_unit.lower()
     to_unit = to_unit.lower()

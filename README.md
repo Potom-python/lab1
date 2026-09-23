@@ -26,10 +26,10 @@
 ### 1. Режим калькулятора (`calc`)
 Поддерживает вычисления с пробелами, унарными знаками, вещественными числами и строгим приоритетом (`*`, `/` старше `+`, `-`).
 ```bash
-python -m src.toolkit calc "2 + 3 * 4.5"
-python -m src.toolkit calc "2+3/3*5+1"
-python -m src.toolkit calc "-2 * -3"
-python -m src.toolkit calc -2 * 3 + 1
+python -m toolkit calc "2 + 3 * 4.5"
+python -m toolkit calc "2+3/3*5+1"
+python -m toolkit calc "-2 * -3"
+python -m toolkit calc -2 * 3 + 1
 ```
 
 ### 2. Режим конвертера (`convert`)
@@ -38,13 +38,13 @@ python -m src.toolkit calc -2 * 3 + 1
 * **Длина:** `mm`, `cm`, `m`, `km` (базовая единица — миллиметр)
 * **Температура:** `C`, `F`, `K` (с автоматическим пересчетом формул)
 ```bash
-python -m src.toolkit convert 1.5 --from kg --to g
-python -m src.toolkit convert 100 --from c --to F
+python -m toolkit convert 1.5 --from kg --to g
+python -m toolkit convert 100 --from c --to F
 ```
 
 ### 3. Информация о работе программы (`--help`)
 ```bash
-python -m src.toolkit --help
+python -m toolkit --help
 ```
 
 ---
