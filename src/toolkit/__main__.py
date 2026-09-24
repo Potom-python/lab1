@@ -3,61 +3,52 @@ import sys
 from .calculator import calculate, pars_to_rpn
 from .converter import convertation
 from .tokenizator import tokenize
+import argparse
 
 
 def format_float(a: float) -> str:
     """Форматирование вывода типа float"""
-    return f"{a:.10f}".rstrip('0').rstrip('.')
+    return f"{a:.12f}".rstrip('0').rstrip('.')
 
 
 def main():
-    """Обработка CLI для дальнейшей загрузки значенйи в вычислительное ядро
+    """Обработка CLI для дальнейшей загрузки значений в вычислительное ядро
 
-    Обрабатывает sys.argv 1 эл. всегда явл командой.
+    Работает с помощью argparse.
     calc: заносит в функцию calculate все аргументы
     введенные в консоль после calc, что делает необязательным ввод через командную строку вида:
     python -m toolkit calc "1+2". Теперь можно: python -m toolkit calc 1 + 2 +3+4 +1 - 7, далее выводит
     отформатированный результат выполнения функции
-    --help: выводит справку по использованию калькулятора, заканчивается с кодом возврата 0
-    convert: обрабатывает все аргументы после convert, проверяет длину, чтобы удостоверится
-    в корректном использовании команды. Далее создает словарь флаг: значение и вносит значения в функцию.
-    Далее выводит отформатированный результат выполнения функции
+    --help: выводит справку по использованию калькулятора
+    convert: выводит отформатированный результат выполнения функции
     """
-    command = sys.argv[1]
-    if command == "":
-        raise ValueError("Строка не должна быть пустой")
-    if command == "calc":
-        arguments = sys.argv[1:]
-        tokens = tokenize(arguments[1:])
+
+    parser = argparse.ArgumentParser(description="Калькулятор и конвертер",
+                                     epilog="Допустимые единицы\n"
+                                            "mass: g, kg\n"
+                                            "lens: mm cm m km\n"
+                                            "t: K, F, C\n"
+                                            "Использование:\n"
+                                            "python -m toolkit calc <выражение>\n"
+                                            "python -m toolkit convert <значение> "
+                                            "--from <ед из которой переводишь> --to <ед, в которую перевести>",
+                                     formatter_class=argparse.RawDescriptionHelpFormatter
+                                     )
+    subparsers = parser.add_subparsers(dest="command")
+    calc_parser = subparsers.add_parser("calc")
+    convert_parser = subparsers.add_parser("convert")
+    calc_parser.add_argument("expression", nargs="+")
+    convert_parser.add_argument("value")
+    convert_parser.add_argument("--from", dest="from_unit", required=True)
+    convert_parser.add_argument("--to", dest="to_unit", required=True)
+    arguments = parser.parse_args()
+
+    if arguments.command == "calc":
+        tokens = tokenize(arguments.expression)
         rpn_tokens = pars_to_rpn(tokens)
         print(format_float(float(calculate(rpn_tokens))))
-    elif command == "--help":
-        print("Калькулятор и конвертер")
-        print("Допустимые единицы")
-        print("mass: g, kg")
-        print("lens: mm cm m km")
-        print("t: K, F, C")
-        print("Использование:")
-        print("python -m toolkit calc выражение")
-        print(
-            "python -m toolkit convert <значение> "
-            "--from <ед из которой переводишь> --to <ед, в которую перевести>"
-        )
-        sys.exit(0)
-    elif command == "convert":
-        arguments = sys.argv[1:]
-        if len(arguments) != 6:
-            raise ValueError("Неверное количество команд или значений")
-        try:
-            value = arguments[1]
-            args_pars = {arguments[2]: arguments[3], arguments[4]: arguments[5]}
-            from_unit = args_pars["--from"]
-            to_unit = args_pars["--to"]
-        except Exception:
-            raise ValueError("Неверно указаны параметры --from или --to")
-
-        print(format_float(float(convertation(value, from_unit, to_unit))))
-
+    elif arguments.command == "convert":
+        print(format_float(float(convertation(arguments.value, arguments.from_unit, arguments.to_unit))))
 
 if __name__ == "__main__":
     try:
