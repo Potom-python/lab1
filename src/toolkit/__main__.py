@@ -8,7 +8,11 @@ import argparse
 
 def format_float(a: float) -> str:
     """Форматирование вывода типа float"""
-    return f"{a:.12f}".rstrip('0').rstrip('.')
+    a_copy = a
+    a_formating = f"{a:.12f}".rstrip('0').rstrip('.')
+    if a_formating == '0':
+        return a_copy
+    return a_formating
 
 
 def main():
