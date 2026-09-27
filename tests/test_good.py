@@ -54,3 +54,14 @@ def test_convert_length():
 # 9. Конвертация температур + проверка на учет регистра
 def test_convert_temperature():
     assert convertation("100", "c", "F") == Decimal(212)
+
+
+# 10. Проверка на то, что argparse не считает -number за флаг в calc
+def test_calc_argparse_work1():
+    rpn = pars_to_rpn(tokenize("-2 * -3"))
+    assert calculate(rpn) == Decimal(6)
+
+# 11. Проверка на то, что argparse не считает -- за флаг в calc
+def test_calc_argparse_work2():
+    rpn = pars_to_rpn(tokenize("--5 + 4 - 7 + 8"))
+    assert calculate(rpn) == Decimal(10)

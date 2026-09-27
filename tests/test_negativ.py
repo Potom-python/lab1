@@ -21,7 +21,7 @@ def test_invalid_character():
 # 3. Два оператора подряд
 def test_neg_consecutive_operators():
     with pytest.raises(ValueError, match="Пропущен операнд в выражении"):
-        calculate(tokenize("5 * * 3"))
+        calculate(pars_to_rpn(tokenize("5 * * 3")))
 
 
 # 4. Деление на 0
@@ -40,3 +40,8 @@ def test_absolute_zero():
 def test_incompatible_units():
     with pytest.raises(ValueError, match="Невозможно перевести"):
         convertation("10", "kg", "m")
+
+# 7. Неизвестная единица
+def test_unknown_unit():
+    with pytest.raises(ValueError, match="Неизвестная единица"):
+        convertation("10", "xyz", "c")
