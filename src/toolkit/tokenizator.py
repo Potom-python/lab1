@@ -33,7 +33,7 @@ def tokenize(expression: str | list) -> list:
             raise ValueError(f"Недопустимый символ: {value}")
 
         if name == "OP":
-            if (last_name is None or last_name == "OP") and (value in '+-'):
+            if (last_name is None or last_name == "OP" or last_name == "UNAROP") and (value in '+-'):
                 name = "UNAROP"
         last_name = name
         tokens.append((name, value))

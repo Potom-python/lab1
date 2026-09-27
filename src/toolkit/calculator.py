@@ -24,10 +24,16 @@ def pars_to_rpn(tokens: list) -> list:
             while stack:
                 top_name, top_value = stack[-1]
                 top_key = f"UN{top_value}" if top_name == "UNAROP" else top_value
-                if prioritets[top_key] >= prioritets[op_key]:
-                    output.append(stack.pop())
+                if name == "UNAROP":
+                    if prioritets[top_key] > prioritets[op_key]:
+                        output.append(stack.pop())
+                    else:
+                        break
                 else:
-                    break
+                    if prioritets[top_key] >= prioritets[op_key]:
+                        output.append(stack.pop())
+                    else:
+                        break
             stack.append((name, value))
     while stack:
         output.append(stack.pop())
