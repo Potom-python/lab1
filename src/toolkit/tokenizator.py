@@ -20,7 +20,7 @@ def tokenize(expression: str | list) -> list:
         raise SyntaxError("Выражение не должно быть пустым")
     if expression[0] == ".":
         raise ValueError("Выражение не может начинаться с точки")
-    rules = [("NUMBER", r"\d+(\.\d+)?"), ("OP", r"[+-/*]"), ("RANDSYM", r".")]
+    rules = [("NUMBER", r"\d+(\.\d+)?"), ("OP", r"[+\-*/]"), ("RANDSYM", r".")]
 
     tokens = []
     pattern = "|".join(f"(?P<{name}>{rule})" for name, rule in rules)
