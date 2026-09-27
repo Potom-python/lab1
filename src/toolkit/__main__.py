@@ -23,8 +23,11 @@ def main():
 
     Работает с помощью argparse.
     calc: заносит в функцию calculate все аргументы
-    введенные в консоль после calc, что делает необязательным ввод через командную строку вида:
-    python -m toolkit calc "1+2". Теперь можно: python -m toolkit calc 1 + 2 +3+4 +1 - 7, далее выводит
+    введенные в консоль после calc, что делает необязательным
+    ввод через командную строку вида:
+    python -m toolkit calc "1+2".
+    Теперь можно:
+    python -m toolkit calc 1 + 2 +3+4 +1 - 7, далее выводит
     отформатированный результат выполнения функции
     --help: выводит справку по использованию калькулятора
     convert: выводит отформатированный результат выполнения функции
@@ -38,7 +41,8 @@ def main():
                                             "Использование:\n"
                                             "python -m toolkit calc <выражение>\n"
                                             "python -m toolkit convert <значение> "
-                                            "--from <ед из которой переводишь> --to <ед, в которую перевести>",
+                                            "--from <ед из которой переводишь> "
+                                            "--to <ед, в которую перевести>",
                                      formatter_class=argparse.RawDescriptionHelpFormatter
                                      )
     subparsers = parser.add_subparsers(dest="command", required=True)
