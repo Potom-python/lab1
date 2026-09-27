@@ -1,3 +1,5 @@
+import json
+import os
 from decimal import ROUND_HALF_UP, Decimal, getcontext
 
 from .errors import AbsoluteZeroError
@@ -9,7 +11,9 @@ getcontext().rounding = ROUND_HALF_UP
 def convertation(value: str, from_unit: str, to_unit: str) -> Decimal:
     """Конвертирует из одной величины в другую
 
-    В случае масс и длин реализован с помощью словаря, в котором есть какая-то базовая единица, в которую переводится
+    Сначала проверяются from_unit и to_unit на правильность, после чего начинается основная стадия.
+    В случае масс и длин реализован с помощью словаря (берется из файла convert_coef.json),
+    в котором есть какая-то базовая единица, в которую переводится
     переданная, после чего конвертируется в уже нужную умножая базовую на значение нужной в словаре.
     В случае с температурой реализовано с помощью if, elif, else и формул, по которым опять же переданная единица
     переводится в базовую и уже из нее с помощью другой формулы переводится в нужную.
@@ -18,13 +22,14 @@ def convertation(value: str, from_unit: str, to_unit: str) -> Decimal:
     from_unit = from_unit.lower()
     to_unit = to_unit.lower()
 
-    mass_coefficients = {"g": Decimal(1), "kg": Decimal(1000)}
-    lens_coefficients = {
-        "mm": Decimal(1),
-        "cm": Decimal(10),
-        "m": Decimal(1000),
-        "km": Decimal(1000000),
-    }
+    ed_mass = ("kg", "g")
+    ed_temp = ("c", "f", "k")
+    ed_lens = ('mm', 'cm', 'm', 'km')
+
+    os_directory = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(os_directory, 'convert_coef.json')
+    with open(file_path, 'r') as f:
+        coefficients = json.load(f)
 
     result = None
 
@@ -37,19 +42,23 @@ def convertation(value: str, from_unit: str, to_unit: str) -> Decimal:
             f"Физически невозможная температура:"
             f" {value}{from_unit.upper()} ниже абсолютного нуля"
         )
+    if from_unit not in coefficients and from_unit not in ed_temp:
+        raise ValueError(f"Неизвестная единица {from_unit}")
+    if to_unit not in coefficients and to_unit not in ed_temp:
+        raise ValueError(f"Неизвестная единица {to_unit}")
 
-    if from_unit in mass_coefficients:
-        value = value * mass_coefficients[from_unit]
-        if to_unit not in mass_coefficients:
-            raise ValueError(f"Невозможно перевести из {from_unit} в {to_unit}")
-        result = value / mass_coefficients[to_unit]
+    if from_unit in ed_temp and to_unit not in ed_temp:
+        raise ValueError(f"Невозможно перевести из {from_unit} в {to_unit}")
+    elif from_unit in ed_mass and to_unit not in ed_mass:
+        raise ValueError(f"Невозможно перевести из {from_unit} в {to_unit}")
+    elif from_unit in ed_lens and to_unit not in ed_lens:
+        raise ValueError(f"Невозможно перевести из {from_unit} в {to_unit}")
+
+    if from_unit in coefficients:
+        value = value * Decimal(coefficients[from_unit])
+        result = value / Decimal(coefficients[to_unit])
         return result
-    if from_unit in lens_coefficients:
-        value = value * lens_coefficients[from_unit]
-        if to_unit not in lens_coefficients:
-            raise ValueError(f"Невозможно перевести из {from_unit} в {to_unit}")
-        result = value / lens_coefficients[to_unit]
-        return result
+
     if from_unit == "c":
         pass
     elif from_unit == "f":

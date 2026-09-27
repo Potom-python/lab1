@@ -19,8 +19,8 @@ def test_calc_decimal_precision():
 
 # 3. Унарный + и -
 def test_calc_unary_operators():
-    rpn = pars_to_rpn(tokenize("-5 + +3"))
-    assert calculate(rpn) == Decimal(-2)
+    rpn = pars_to_rpn(tokenize("-2*+3"))
+    assert calculate(rpn) == Decimal(-6)
 
 
 # 4. Игнорирование пробелов между токенами
@@ -43,7 +43,7 @@ def test_calc_large_expression():
 
 # 7. Регистр единиц измерения не учитывается
 def test_convert_case_insensitivity():
-    assert convertation("10", "KG", "g") == Decimal('10000')
+    assert convertation("10", "KG", "g") == Decimal(10000)
 
 
 # 8. Конвертация единиц длины
@@ -53,4 +53,4 @@ def test_convert_length():
 
 # 9. Конвертация температур + проверка на учет регистра
 def test_convert_temperature():
-    assert convertation("100", "c", "F") == Decimal('212')
+    assert convertation("100", "c", "F") == Decimal(212)

@@ -1,5 +1,7 @@
 import sys
+
 import pytest
+
 from src.toolkit.__main__ import main
 
 

@@ -1,13 +1,16 @@
+import argparse
 import sys
+import re
 
 from .calculator import calculate, pars_to_rpn
 from .converter import convertation
 from .tokenizator import tokenize
-import argparse
 
 
 def format_float(a: float) -> str:
     """Форматирование вывода типа float"""
+    if a == 0:
+        return 0
     a_copy = a
     a_formating = f"{a:.12f}".rstrip('0').rstrip('.')
     if a_formating == '0':
@@ -38,13 +41,17 @@ def main():
                                             "--from <ед из которой переводишь> --to <ед, в которую перевести>",
                                      formatter_class=argparse.RawDescriptionHelpFormatter
                                      )
-    subparsers = parser.add_subparsers(dest="command")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
     calc_parser = subparsers.add_parser("calc")
-    convert_parser = subparsers.add_parser("convert")
+    calc_parser._negative_number_matcher = re.compile(r'^-.+')
     calc_parser.add_argument("expression", nargs="+")
+
+    convert_parser = subparsers.add_parser("convert")
     convert_parser.add_argument("value")
     convert_parser.add_argument("--from", dest="from_unit", required=True)
     convert_parser.add_argument("--to", dest="to_unit", required=True)
+
     arguments = parser.parse_args()
 
     if arguments.command == "calc":
@@ -53,6 +60,7 @@ def main():
         print(format_float(float(calculate(rpn_tokens))))
     elif arguments.command == "convert":
         print(format_float(float(convertation(arguments.value, arguments.from_unit, arguments.to_unit))))
+
 
 if __name__ == "__main__":
     try:

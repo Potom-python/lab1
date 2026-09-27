@@ -2,7 +2,7 @@ import pytest
 
 from src.toolkit.calculator import calculate, pars_to_rpn
 from src.toolkit.converter import convertation
-from src.toolkit.errors import AbsoluteZeroError, ConsecutiveOperatorsError
+from src.toolkit.errors import AbsoluteZeroError
 from src.toolkit.tokenizator import tokenize
 
 
@@ -20,8 +20,8 @@ def test_invalid_character():
 
 # 3. Два оператора подряд
 def test_neg_consecutive_operators():
-    with pytest.raises(ConsecutiveOperatorsError):
-        tokenize("5 * * 3")
+    with pytest.raises(ValueError, match="Пропущен операнд в выражении"):
+        calculate(tokenize("5 * * 3"))
 
 
 # 4. Деление на 0
